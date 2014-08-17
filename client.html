@@ -1,0 +1,82 @@
+<!html>
+<head>
+<script>
+var globalservice = "";
+function makecall(){
+	var status = document.getElementsByName('service');
+	var operation ="";
+	for (var i = 0, length = status.length; i < length; i++) {
+    	if (status[i].checked) {
+        	operation=status[i].value;
+        	break;
+    	}
+	}
+
+	url = "http://localhost:8080/SampleRESTful/EmployeeDetails";
+	url = url +"/"+ document.getElementById('employeeid').value + "/";
+	if(operation == "PUT" || operation == "POST"){
+		url = url + document.getElementById('employeename').value;
+	}
+	if (window.XMLHttpRequest)
+	{
+		httpReq=new XMLHttpRequest();
+	}
+	else
+	{
+		httpReq=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	httpReq.onreadystatechange=function()
+  	{
+  		if (httpReq.readyState==4 && httpReq.status==200)
+    {
+    	document.getElementById('msg').innerHTML = httpReq.responseText;
+    }
+	};
+    httpReq.open(operation,url,true);
+	httpReq.send();
+}
+
+function changeradio(){
+var status = document.getElementsByName('service');
+for (var i = 0, length = status.length; i < length; i++) {
+    if (status[i].checked) {
+        if(status[i].value == "GET")
+        {
+        	document.getElementById('employeename').value = "";
+        	document.getElementById('employeename').disabled=true;
+        }
+        if(status[i].value == "PUT")        
+        {
+        	document.getElementById('employeename').value = "";
+        	document.getElementById('employeename').disabled=false;
+        }
+        if(status[i].value == "POST")
+    	{
+        	document.getElementById('employeename').value = "";
+        	document.getElementById('employeename').disabled=false;
+        }
+        if(status[i].value == "DELETE")
+        {
+        	document.getElementById('employeename').value = "";
+        	document.getElementById('employeename').disabled=true;
+        }
+        break;
+    }
+}
+}
+
+</script>
+</head>
+<body>
+	Enter your Employee Id and/or name and invoke the RESTful service :- (Employee id 101 is already added)<br>
+	Id:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" id="employeeid" /><br>
+	Name: <input type="text" id="employeename" /><br><br>
+	Choose a Type of service:<br> 
+	<input type="radio" name="service" value="GET" onclick="changeradio()">GET(read)&nbsp;<br>
+	<input type="radio" name="service" value="PUT" onclick="changeradio()">PUT(update)&nbsp;<br>
+	<input type="radio" name="service" value="POST" onclick="changeradio()">POST(create)&nbsp;<br>
+	<input type="radio" name="service" value="DELETE" onclick="changeradio()">DELETE(delete)<br><br>
+	<input type="button" value="Invoke Service" onclick="makecall()" /><br><br>
+	Message got from service:<br> <label for="employeeid" id="msg"></label>
+</body>
+</html>
